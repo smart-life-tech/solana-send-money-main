@@ -1,5 +1,6 @@
 // @ts-ignore
 import Wallet from "@project-serum/sol-wallet-adapter";
+
 import {
   Connection,
   SystemProgram,
@@ -8,7 +9,11 @@ import {
   TransactionInstruction
 } from "@solana/web3.js";
 import EventEmitter from "eventemitter3";
-
+declare global {
+  interface Window {
+    solana: any;
+  }
+}
 export interface WalletAdapter extends EventEmitter {
   publicKey: PublicKey | null;
   signTransaction: (transaction: Transaction) => Promise<Transaction>;
@@ -18,15 +23,15 @@ export interface WalletAdapter extends EventEmitter {
 
 const cluster = "http://mainnet-beta.solana.com";
 const connection = new Connection(cluster, "confirmed");
-const wallet: WalletAdapter = new Wallet("https://www.phantom.app", cluster);
+const wallet: WalletAdapter = new Wallet("chrome-extension://bfnaelmomeimhlpmgjnjophhpkkoljpa/popup.html", cluster);
 
 export async function initWallet(): Promise<[Connection, WalletAdapter]> {
- // await wallet.connect();
- const response = await window.solana.connect();
+  await wallet.connect();
+ //const response = await window.solana.connect();
   console.log("wallet publicKey", wallet?.publicKey?.toBase58());
   
-  const publicKey = response.publicKey.toString();
- console.log(`Wallet connected!, address:, ${publicKey}`);
+ // const publicKey = response.publicKey.toString();
+ //console.log(`Wallet connected!, address:, ${publicKey}`);
 
   return [connection, wallet];
 }
