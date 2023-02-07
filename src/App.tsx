@@ -28,9 +28,15 @@ function App() {
   }, []);
 
   const didSendMoney = () => {
-    getTransactions(conn.current!, wall.current!.publicKey!).then((trans) => {
+   // getTransactions(conn.current!, wall.current!.publicKey!).then((trans) => {
+   //   setTransactions(trans);
+   // });
+   if (conn.current && wall.current && wall.current.publicKey) {
+    getTransactions(conn.current, wall.current.publicKey).then((trans) => {
       setTransactions(trans);
     });
+  }
+
   };
 
   return (

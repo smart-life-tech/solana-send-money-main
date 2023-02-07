@@ -23,15 +23,19 @@ export interface WalletAdapter extends EventEmitter {
 
 const cluster = "http://mainnet-beta.solana.com";
 const connection = new Connection(cluster, "confirmed");
-const wallet: WalletAdapter = new Wallet("chrome-extension://bfnaelmomeimhlpmgjnjophhpkkoljpa/popup.html", cluster);
-
+const wallet: WalletAdapter = new Wallet("https://phantom.app/", cluster);
+//const { solana } = window;
 export async function initWallet(): Promise<[Connection, WalletAdapter]> {
-  await wallet.connect();
- //const response = await window.solana.connect();
+  const response = await window.solana.connect();
+  wallet.connect();
+  //wallet=response;
+  console.log("response is ", response);
+  //const response = await window.solana.connect();
+  console.log('wallet account ', response.publicKey.toString());
   console.log("wallet publicKey", wallet?.publicKey?.toBase58());
-  
- // const publicKey = response.publicKey.toString();
- //console.log(`Wallet connected!, address:, ${publicKey}`);
+
+  // const publicKey = response.publicKey.toString();
+  //console.log(`Wallet connected!, address:, ${publicKey}`);
 
   return [connection, wallet];
 }
@@ -43,6 +47,7 @@ export async function sendMoney(
   try {
     console.log("starting sendMoney");
     const destPubkey = new PublicKey(destPubkeyStr);
+    console.log("getting account info");
     const walletAccountInfo = await connection.getAccountInfo(
       wallet!.publicKey!
     );
